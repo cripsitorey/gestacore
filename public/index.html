@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Prácticas - Laboratorio de Física</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-header select {
+            font-size: 16px;
+            padding: 5px;
+            margin: 0 10px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .day {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .day:hover {
+            background-color: #eee;
+        }
+        /* Estilos para el modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .add-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendario de Prácticas</h1>
+    <div class="calendar-header">
+        <select id="monthSelector"></select>
+        <select id="yearSelector"></select>
+    </div>
+    <div class="calendar" id="calendar"></div>
+
+    <!-- Modal para detalles del día -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Detalles del Día</h2>
+            <div id="modalContent"></div>
+            <button class="add-button" id="addButton" onclick="addAssistance()">Agregar Asistencia</button>
+        </div>
+    </div>
+
+    <script>
+        const calendarEl = document.getElementById('calendar');
+        const modal = document.getElementById('detailsModal');
+        const modalContent = document.getElementById('modalContent');
+        const monthSelector = document.getElementById('monthSelector');
+        const yearSelector = document.getElementById('yearSelector');
+
+        let selectedDate = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function populateSelectors() {
+            // Poblar selector de meses
+            const months = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                if (index === currentMonth) option.selected = true;
+                monthSelector.appendChild(option);
+            });
+
+            // Poblar selector de años
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear - 10; i <= currentYear + 10; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentYear) option.selected = true;
+                yearSelector.appendChild(option);
+            }
+        }
+
+        function generateCalendar() {
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+            const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
+            const daysInMonth = lastDayOfMonth.getDate();
+            const startDay = firstDayOfMonth.getDay();
+
+            calendarEl.innerHTML = '';
+
+            // Agregar días en blanco hasta el primer día del mes
+            for (let i = 0; i < startDay; i++) {
+                const blankDay = document.createElement('div');
+                blankDay.className = 'day';
+                blankDay.style.visibility = 'hidden';
+                calendarEl.appendChild(blankDay);
+            }
+
+            // Agregar los días del mes
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day';
+                dayEl.textContent = day;
+                dayEl.onclick = () => showDayDetails(day);
+                calendarEl.appendChild(dayEl);
+            }
+        }
+
+        async function showDayDetails(day) {
+            selectedDate = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Debe iniciar sesión para ver los detalles.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/laboratoristas/estudiantes/${selectedDate}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const estudiantes = await response.json();
+                    modalContent.innerHTML = `<p>Estudiantes registrados el ${selectedDate}:</p><ul>${estudiantes.map(email => `<li>${email}</li>`).join('')}</ul>`;
+                } else {
+                    modalContent.textContent = 'Error al obtener los estudiantes registrados.';
+                }
+            } catch (error) {
+                modalContent.textContent = 'Error al conectar con el servidor.';
+            }
+
+            modal.style.display = "block";
+        }
+
+        async function addAssistance() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Debe iniciar sesión para agregar asistencia.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/estudiantes/practicas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ selected_date: selectedDate, selected_practice: 'Práctica 1' })
+                });
+
+                if (response.ok) {
+                    alert('Asistencia agregada correctamente.');
+                    closeModal();
+                } else {
+                    alert('Error al agregar asistencia. Verifique si ya ha alcanzado el límite diario.');
+                }
+            } catch (error) {
+                alert('Error al conectar con el servidor.');
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function updateCalendar() {
+            currentMonth = parseInt(monthSelector.value);
+            currentYear = parseInt(yearSelector.value);
+            generateCalendar();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        populateSelectors();
+        generateCalendar();
+
+        monthSelector.addEventListener('change', updateCalendar);
+        yearSelector.addEventListener('change', updateCalendar);
+    </script>
+</body>
+</html>
