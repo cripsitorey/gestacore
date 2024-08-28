@@ -1,12 +1,13 @@
 // const { Pool } = require('pg');
-import pg from 'pg'
-import {config} from 'dotenv'
+// import pg from 'pg'
+const pg= require('pg');
+const config = require('dotenv');
 
-config()
+// config()
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: true
+  // ssl: true
 });
 
 module.exports = pool;
