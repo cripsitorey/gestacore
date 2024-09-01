@@ -12,9 +12,15 @@ app.use(bodyParser.json());
 app.use('/api', routes);
 
 // Ruta para servir "login.html"
+app.get('/calendar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'calendar.html'));
+});
+
+// Ruta para servir "register.html"
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
+
 
 // Ruta para servir "index.html" (calendario) como página por defecto después del login
 app.get('/', (req, res) => {

@@ -1,10 +1,37 @@
 const express = require('express');
 const { login, authenticateToken } = require('./auth');
+const bcrypt = require('bcrypt');
 const pool = require('./db');
-
 const router = express.Router();
 
 router.post('/login', login); // Ruta para el login
+
+router.post('/register', async (req, res) => {
+  const { nombre, email, password } = req.body;
+
+  try {
+      // Verificar si el usuario ya existe
+      const existingUser = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+      if (existingUser.rowCount > 0) {
+          return res.status(400).send('El correo ya está registrado.');
+      }
+
+      // Hashear la contraseña
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insertar el nuevo usuario con rol de estudiante
+      await pool.query(
+          'INSERT INTO usuarios (id, email, password, nombre, role) VALUES ($1, $2, $3, $4, $5)',
+          [password, email, hashedPassword, nombre, 'estudiante']
+      );
+
+      res.status(201).send('Usuario registrado exitosamente');
+  } catch (error) {
+      console.error('Error al registrar el usuario:', error);
+      res.status(500).send('Error interno del servidor');
+  }
+});
+
 
 // Rutas protegidas
 router.use(authenticateToken);
@@ -83,13 +110,13 @@ router.get('/laboratoristas/estudiantes/:date', authenticateToken, async (req, r
   try {
       // Consultar los correos electrónicos de los estudiantes registrados en la fecha especificada
       const { rows } = await pool.query(`
-          SELECT u.email 
+          SELECT u.nombre 
           FROM estudiantes e 
           JOIN usuarios u ON e.id = u.id 
           WHERE e.selected_date = $1
       `, [date]);
 
-      res.send(rows.map(row => row.email)); // Enviar solo los correos electrónicos
+      res.send(rows.map(row => row.nombre)); // Enviar solo los correos electrónicos
   } catch (error) {
       console.error('Error al consultar los estudiantes registrados:', error);
       res.status(500).send('Error al consultar los estudiantes registrados');

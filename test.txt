@@ -3,17 +3,25 @@ postgresql://laboratorio_fisica_user:FIw0Byx63fzvkBzXf0X73LTcC0azFpsu@dpg-cr7aeb
 
 -- Insertar un laboratorista
 INSERT INTO usuarios (id, email, password, role) VALUES 
-(1726918285, 'emiliocuenca@saintdominicschool.edu.ec', '1726918285', 'laboratorista');
+(1726918285, 'emiliocuenca@saintdominicschool.edu.ec', '$2b$10$R7hs8KDFv7bqykKwYnjrCOU6nthZckX9YG/XJwTHi.3HRrLrBUH5y', 'laboratorista');
 
 INSERT INTO laboratoristas (id, available_dates) VALUES 
 (1726918285, '[]');
 
+
 -- Insertar un estudiante
 INSERT INTO usuarios (id, email, password, role) VALUES 
-(1717, 'test1e@teste.edu', '$2b$10$BHexWV07P7RAhoHXQAHEo.4CU7gXoU9w/FNc46apODYSgRWz15v0S', 'estudiante');
+(1716, 'test2e@teste.edu', '$2b$10$BHexWV07P7RAhoHXQAHEo.4CU7gXoU9w/FNc46apODYSgRWz15v0S', 'estudiante');
 
 INSERT INTO estudiantes (id) VALUES 
-(1717);
+(1716);
+
+-- Insertar un estudiante
+INSERT INTO usuarios (id, email, password, role) VALUES 
+(1718, 'test3e@teste.edu', '$2b$10$BHexWV07P7RAhoHXQAHEo.4CU7gXoU9w/FNc46apODYSgRWz15v0S', 'estudiante');
+
+INSERT INTO estudiantes (id) VALUES 
+(1718);
 
 
 CREATE DATABASE laboratorio_fisica;
