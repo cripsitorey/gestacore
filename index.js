@@ -11,24 +11,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use('/api', routes);
 
-// Ruta para servir "login.html"
+// Ruta para servir "calendar.html"
 app.get('/calendar', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'calendar.html'));
 });
 
-// Ruta para servir "register.html"
+// Ruta para servir "login.html"
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 
-// Ruta para servir "index.html" (calendario) como página por defecto después del login
+// Ruta para servir "index.html" (registro) como pagina por defecto
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+const serverPort = 3000;
+
+app.listen(serverPort, () => {
+  console.log('servidor corriendo en el puerto ' + serverPort);
 });
 
 

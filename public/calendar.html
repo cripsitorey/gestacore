@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="/images/GKTlogo_Image.png">
-    <link rel="stylesheet" href="css/main.css">
-    <title>Calendario de Prácticas - Laboratorio de Física</title>
+    <title>Calendario de Prácticas</title>
+    <link rel="stylesheet" href="css/calendar.css">
 </head>
 <body>
-    <div id="kali">
-        <h1>Calendario de Prácticas</h1>
+    <h1>Calendario de Prácticas</h1>
+    <div class="calendar-container">
         <div class="calendar-header">
-            <select id="monthSelector"></select>
-            <select id="yearSelector"></select>
+            <button class="prev-month" id="prevMonth">&lt;</button>
+            <h2 id="currentMonth"></h2>
+            <button class="next-month" id="nextMonth">&gt;</button>
+        </div>
+        <!-- Encabezado para los días de la semana -->
+        <div class="calendar-weekdays">
+            <div>Lunes</div>
+            <div>Martes</div>
+            <div>Miércoles</div>
+            <div>Jueves</div>
+            <div>Viernes</div>
         </div>
         <div class="calendar" id="calendar"></div>
+    </div>
 
-        <!-- Modal para detalles del día -->
-        <div id="detailsModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>Detalles del Día</h2>
-                <div id="modalContent"></div>
-                <button class="add-button" id="addButton" onclick="addAssistance()">Agregar Asistencia</button>
-            </div>
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Detalles del Día</h2>
+            <div id="modalContent"></div>
+            <button class="add-button" id="addButton" onclick="addAssistance()">Agregar Asistencia</button>
         </div>
     </div>
+
     <script src="js/calendar.js"></script>
 </body>
 </html>

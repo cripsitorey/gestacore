@@ -1,0 +1,169 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+}
+
+/* Oculta el scrollbar sin deshabilitarlo*/
+::-webkit-scrollbar {
+    display: none;
+}
+
+h1 {
+    text-align: center;
+}
+
+.calendar-container {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-header h2 {
+    margin: 0;
+    font-size: 24px;
+    text-align: center;
+}
+
+.calendar-header button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.calendar-header button:hover {
+    background-color: #21262d;
+}
+
+/* Estilo para los días de la semana en la parte superior */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
+    gap: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #7e7e7e;
+}
+
+/* Estilo del calendario para solo 5 columnas (Lunes a Viernes) */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
+    gap: 10px;
+    max-width: 100%;
+    width: 100%;
+    margin: 20px 5px;
+}
+
+.day-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    align-items: center; 
+    width: 100px;
+}
+
+.day {
+    color: #fff;
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%; /* Botones a tamaño completo dentro del contenedor */
+}
+
+/* .day:hover {
+    background-color: #;
+} */
+
+.morning {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-image: url("../images/morningp.png");
+  background-position-y: bottom;
+}
+
+.afternoon {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-image: url("../images/afternoon.png");
+}
+
+.morning, .afternoon {
+  margin: 0;
+  background-size: cover;
+  height: 3.2em;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #000;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.add-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.add-button:hover {
+    background-color: #21262d;
+}
+
+.close {
+    color: #333;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #21262d;
+    text-decoration: none;
+    cursor: pointer;
+}

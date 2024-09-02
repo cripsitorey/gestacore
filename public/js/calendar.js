@@ -1,36 +1,21 @@
 const calendarEl = document.getElementById('calendar');
 const modal = document.getElementById('detailsModal');
 const modalContent = document.getElementById('modalContent');
-const monthSelector = document.getElementById('monthSelector');
-const yearSelector = document.getElementById('yearSelector');
+const prevMonthBtn = document.getElementById('prevMonth');
+const nextMonthBtn = document.getElementById('nextMonth');
+const currentMonthEl = document.getElementById('currentMonth');
 
 let selectedDate = null;
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
-function populateSelectors() {
-    // Poblar selector de meses
-    const months = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    months.forEach((month, index) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = month;
-        if (index === currentMonth) option.selected = true;
-        monthSelector.appendChild(option);
-    });
+const months = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+]; 
 
-    // Poblar selector de años
-    const currentYear = new Date().getFullYear();
-    for (let i = currentYear - 10; i <= currentYear + 10; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        if (i === currentYear) option.selected = true;
-        yearSelector.appendChild(option);
-    }
+function updateCalendarHeader() {
+    currentMonthEl.textContent = `${months[currentMonth]} ${currentYear}`;
 }
 
 function generateCalendar() {
@@ -38,26 +23,49 @@ function generateCalendar() {
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
 
     const daysInMonth = lastDayOfMonth.getDate();
-    const startDay = firstDayOfMonth.getDay();
+    let startDay = firstDayOfMonth.getDay(); // 0 = Domingo, 1 = Lunes, etc.
 
-    calendarEl.innerHTML = '';
+    calendarEl.innerHTML = ''; // Limpiar el calendario
 
-    // Agregar días en blanco hasta el primer día del mes
-    for (let i = 0; i < startDay; i++) {
+    // Calcular el número de días en blanco antes del primer lunes del mes
+    let blankDays = (startDay === 0) ? 0 : startDay - 1; // Si es domingo (0), poner 6 días en blanco
+
+    // Rellenar los días en blanco hasta el primer lunes del mes
+    for (let i = 0; i < blankDays; i++) {
         const blankDay = document.createElement('div');
         blankDay.className = 'day';
-        blankDay.style.visibility = 'hidden';
+        blankDay.style.visibility = 'hidden'; // Ocultar días que no son del mes actual
         calendarEl.appendChild(blankDay);
     }
 
-    // Agregar los días del mes
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'day';
-        dayEl.textContent = day;
-        dayEl.onclick = () => showDayDetails(day);
-        calendarEl.appendChild(dayEl);
+    // Añadir los días del mes
+    for (let currentDay = 1; currentDay <= daysInMonth; currentDay++) {
+        const date = new Date(currentYear, currentMonth, currentDay);
+        const dayOfWeek = date.getDay();
+
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Mostrar solo de Lunes (1) a Viernes (5)
+            const dayContainer = document.createElement('div');
+            dayContainer.className = 'day-container';
+
+            // Botón para el turno de la mañana
+            const morningButton = document.createElement('button');
+            morningButton.className = 'day morning';
+            morningButton.textContent = `${currentDay} - Mañana`;
+            morningButton.onclick = () => showDayDetails(currentDay, 'mañana');
+            dayContainer.appendChild(morningButton);
+
+            // Botón para el turno de la tarde
+            const afternoonButton = document.createElement('button');
+            afternoonButton.className = 'day afternoon';
+            afternoonButton.textContent = `${currentDay} - Tarde`;
+            afternoonButton.onclick = () => showDayDetails(currentDay, 'tarde');
+            dayContainer.appendChild(afternoonButton);
+
+            calendarEl.appendChild(dayContainer); // Agregar el contenedor del día al calendario
+        }
     }
+
+    updateCalendarHeader();
 }
 
 async function showDayDetails(day) {
@@ -118,14 +126,23 @@ async function addAssistance() {
     }
 }
 
-function closeModal() {
-    modal.style.display = "none";
+function changeMonth(direction) {
+    currentMonth += direction;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    generateCalendar();
 }
 
-function updateCalendar() {
-    currentMonth = parseInt(monthSelector.value);
-    currentYear = parseInt(yearSelector.value);
-    generateCalendar();
+prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+nextMonthBtn.addEventListener('click', () => changeMonth(1));
+
+function closeModal() {
+    modal.style.display = "none";
 }
 
 window.onclick = function(event) {
@@ -134,8 +151,4 @@ window.onclick = function(event) {
     }
 }
 
-populateSelectors();
 generateCalendar();
-
-monthSelector.addEventListener('change', updateCalendar);
-yearSelector.addEventListener('change', updateCalendar);

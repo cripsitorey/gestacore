@@ -8,10 +8,10 @@ async function login(req, res) {
   const { email, password } = req.body;
   const user = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
 
-  if (user.rowCount === 0) return res.status(404).send('User not found');
+  if (user.rowCount === 0) return res.status(404).send('Usuario no encontrado');
 
   const validPassword = await bcrypt.compare(password, user.rows[0].password);
-  if (!validPassword) return res.status(401).send('Invalid password');
+  if (!validPassword) return res.status(401).send('Contraseña incorrecta');
 
   const token = jwt.sign({ id: user.rows[0].id, role: user.rows[0].role }, secret);
   res.send({ token });
