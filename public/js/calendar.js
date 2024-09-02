@@ -47,17 +47,21 @@ function generateCalendar() {
             const dayContainer = document.createElement('div');
             dayContainer.className = 'day-container';
 
+            // Ojala funcione ptm
+            const numeronico = document.createElement('div');
+            numeronico.className = 'vivido';
+            numeronico.textContent = currentDay;
+            dayContainer.appendChild(numeronico);
+
             // Botón para el turno de la mañana
             const morningButton = document.createElement('button');
             morningButton.className = 'day morning';
-            morningButton.textContent = `${currentDay} - Mañana`;
             morningButton.onclick = () => showDayDetails(currentDay, 'mañana');
             dayContainer.appendChild(morningButton);
 
             // Botón para el turno de la tarde
             const afternoonButton = document.createElement('button');
             afternoonButton.className = 'day afternoon';
-            afternoonButton.textContent = `${currentDay} - Tarde`;
             afternoonButton.onclick = () => showDayDetails(currentDay, 'tarde');
             dayContainer.appendChild(afternoonButton);
 
@@ -68,8 +72,9 @@ function generateCalendar() {
     updateCalendarHeader();
 }
 
-async function showDayDetails(day) {
+async function showDayDetails(day, turno) {
     selectedDate = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+    turneto = turno;
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -78,7 +83,7 @@ async function showDayDetails(day) {
     }
 
     try {
-        const response = await fetch(`/api/laboratoristas/estudiantes/${selectedDate}`, {
+        const response = await fetch(`/api/laboratoristas/estudiantes/${selectedDate}/${turneto}`, { // Añadir turno
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -87,7 +92,21 @@ async function showDayDetails(day) {
 
         if (response.ok) {
             const estudiantes = await response.json();
-            modalContent.innerHTML = `<p>Estudiantes registrados el ${selectedDate}:</p><ul>${estudiantes.map(email => `<li>${email}</li>`).join('')}</ul>`;
+
+            // Crear el selector de prácticas
+            let selectPractica = '<select id="practicaSelect">';
+            for (let i = 1; i <= 30; i++) {
+                selectPractica += `<option value="Práctica ${i}">Práctica ${i}</option>`;
+            }
+            selectPractica += '</select>';
+
+            modalContent.innerHTML = `
+                <p>Estudiantes registrados el ${selectedDate} (${turneto}):</p>
+                <ul>${estudiantes.map(nombre => `<li>${nombre}</li>`).join('')}</ul>
+                <p>Selecciona la práctica:</p>
+                ${selectPractica}
+                <button onclick="addAssistance()">Registrar Asistencia</button>
+            `;
         } else {
             modalContent.textContent = 'Error al obtener los estudiantes registrados.';
         }
@@ -98,12 +117,16 @@ async function showDayDetails(day) {
     modal.style.display = "block";
 }
 
+
 async function addAssistance() {
     const token = localStorage.getItem('token');
     if (!token) {
         alert('Debe iniciar sesión para agregar asistencia.');
         return;
     }
+
+    // Obtener la práctica seleccionada
+    const selectedPractice = document.getElementById('practicaSelect').value;
 
     try {
         const response = await fetch('/api/estudiantes/practicas', {
@@ -112,7 +135,7 @@ async function addAssistance() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ selected_date: selectedDate, selected_practice: 'Práctica 1' })
+            body: JSON.stringify({ selected_date: selectedDate, selected_practice: selectedPractice, turno: turneto })
         });
 
         if (response.ok) {
@@ -125,6 +148,73 @@ async function addAssistance() {
         alert('Error al conectar con el servidor.');
     }
 }
+
+async function highlightUserDay() {
+    const token = localStorage.getItem('token');
+    if (!token) return; // No hacer nada si no hay token
+
+    try {
+        const response = await fetch('/api/estudiantes/practicas', { // Ruta para obtener el registro actual del usuario
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const { selected_date, turno } = data; // Datos de la fecha y turno registrado
+
+            // Resaltar el día registrado
+            const registeredDay = new Date(selected_date).getDate();
+            const registeredTurno = turno === 'mañana' ? 'morning' : 'afternoon';
+
+            document.querySelectorAll('.day-container').forEach(container => {
+                const dayNumber = parseInt(container.querySelector('.vivido').textContent);
+                if (dayNumber === registeredDay) {
+                    const button = container.querySelector(`.${registeredTurno}`);
+                    if (button) button.style.border = '2px solid yellow'; // Añadir borde amarillo
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error al obtener el registro del usuario:', error);
+    }
+}
+
+async function updateAvailabilityIndicators() {
+    const token = localStorage.getItem('token');
+    if (!token) return; // No hacer nada si no hay token
+
+    // Obtener la disponibilidad de cada día y turno
+    try {
+        const response = await fetch('/api/estudiantes/disponibilidad', { // Nueva ruta para obtener disponibilidad
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            data.forEach(({ fecha, turno, count }) => {
+                const day = new Date(fecha).getDate();
+                const turnoClass = turno === 'mañana' ? 'morning' : 'afternoon';
+                
+                document.querySelectorAll('.day-container').forEach(container => {
+                    const dayNumber = parseInt(container.querySelector('.vivido').textContent);
+                    if (dayNumber === day) {
+                        const button = container.querySelector(`.${turnoClass}`);
+                        if (button) button.style.border = count < 6 ? '2px solid green' : '2px solid red';
+                    }
+                });
+            });
+        }
+    } catch (error) {
+        console.error('Error al obtener la disponibilidad:', error);
+    }
+}
+
 
 function changeMonth(direction) {
     currentMonth += direction;
@@ -152,3 +242,5 @@ window.onclick = function(event) {
 }
 
 generateCalendar();
+highlightUserDay();
+updateAvailabilityIndicators();

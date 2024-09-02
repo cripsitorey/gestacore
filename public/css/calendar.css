@@ -73,11 +73,19 @@ h1 {
     margin: 20px 5px;
 }
 
+.vivido {
+    position: absolute;
+    top: 40%;
+}
+
 .day-container {
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
-    align-items: center; 
+    text-align: center;
+    color: #000;
+    align-items: center;
+    position: relative;
     width: 100px;
 }
 
