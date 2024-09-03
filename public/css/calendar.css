@@ -1,0 +1,223 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+}
+
+/* Oculta el scrollbar sin deshabilitarlo*/
+::-webkit-scrollbar {
+    display: none;
+}
+
+h1 {
+    text-align: center;
+}
+
+.calendar-container {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-header h2 {
+    margin: 0;
+    font-size: 24px;
+    text-align: center;
+}
+
+.calendar-header button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.calendar-header button:hover {
+    background-color: #21262d;
+}
+
+/* Estilo para los días de la semana en la parte superior */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
+    gap: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #7e7e7e;
+}
+
+/* Estilo del calendario para solo 5 columnas (Lunes a Viernes) */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
+    gap: 10px;
+    max-width: 100%;
+    width: 100%;
+    margin: 20px 5px;
+}
+
+.vivido {
+    position: absolute;
+    top: 40%;
+}
+
+.day-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #000;
+    align-items: center;
+    position: relative;
+    width: 100px;
+}
+
+.day {
+    color: #fff;
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%; /* Botones a tamaño completo dentro del contenedor */
+}
+
+/* .day:hover {
+    background-color: #;
+} */
+
+.morning {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-image: url("../images/morningp.png");
+  background-position-y: bottom;
+}
+
+.afternoon {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-image: url("../images/afternoon.png");
+}
+
+.morning, .afternoon {
+  margin: 0;
+  background-size: cover;
+  height: 3.2em;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #000;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.add-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.add-button:hover {
+    background-color: #21262d;
+}
+
+.close {
+    color: #333;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #21262d;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#practicaSelect {
+    display: block;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 400;
+    color: #444;
+    line-height: 1.3;
+    padding: .4em 1.4em .3em .8em;
+    width: 400px;
+    max-width: 100%; 
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid #aaa;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.03);
+    border-radius: .3em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+    linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+}
+
+#practicaSelect::-ms-expand {
+    display: none;
+}
+
+#practicaSelect:hover {
+    border-color: #888;
+}
+
+#practicaSelect:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222; 
+    outline: none;
+}
+
+#practicaSelect option {
+    font-weight:normal;
+}

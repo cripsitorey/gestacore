@@ -1,0 +1,140 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+}
+/* Oculta el scrollbar sin deshabilitarlo*/
+::-webkit-scrollbar {
+    display: none;
+}
+h1 {
+    text-align: center;
+}
+.register-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+.register-container h2 {
+    margin-bottom: 20px;
+}
+.register-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.register-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.register-container button:hover {
+    background-color: #218838;
+}
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+.login-container {
+    background-color: #18181A;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    color: white;
+}
+.login-container h2 {
+    margin-bottom: 20px;
+}
+.login-container input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #213688;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.login-container button:hover {
+    background-color: #213688;
+}
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.calendar-header select {
+    font-size: 16px;
+    padding: 5px;
+    margin: 0 10px;
+}
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+.day {
+    background-color: rgb(24, 24, 26);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.day:hover {
+    background-color: #eee;
+}
+
+@media (max-width: 768px) {
+    .calendar {
+        grid-template-columns: repeat(4, 1fr); /* 4 columnas en tablets */
+    }
+    .day {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+    }
+    .day {
+        padding: 8px;
+        font-size: 10px;
+    }
+}
