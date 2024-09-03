@@ -104,7 +104,7 @@ router.get('/laboratoristas/estudiantes/:date/:turno', authenticateToken, async 
   try {
       // Consultar los nombres de los estudiantes registrados en la fecha y turno especificados
       const { rows } = await pool.query(`
-          SELECT u.nombre 
+          SELECT u.nombre
           FROM estudiantes e 
           JOIN usuarios u ON e.id = u.id 
           WHERE e.selected_date = $1 AND e.turno = $2

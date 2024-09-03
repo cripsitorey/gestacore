@@ -73,14 +73,14 @@ h1 {
 .login-container button {
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
+    background-color: #213688;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 .login-container button:hover {
-    background-color: #218838;
+    background-color: #213688;
 }
 .error-message {
     color: red;

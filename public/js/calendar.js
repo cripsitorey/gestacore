@@ -102,10 +102,9 @@ async function showDayDetails(day, turno) {
 
             modalContent.innerHTML = `
                 <p>Estudiantes registrados el ${selectedDate} (${turneto}):</p>
-                <ul>${estudiantes.map(nombre => `<li>${nombre}</li>`).join('')}</ul>
+                <ul>${estudiantes.map(selected_practice => `<li>${selected_practice}</li>`).join('')}</ul>
                 <p>Selecciona la práctica:</p>
                 ${selectPractica}
-                <button onclick="addAssistance()">Registrar Asistencia</button>
             `;
         } else {
             modalContent.textContent = 'Error al obtener los estudiantes registrados.';
@@ -205,7 +204,7 @@ async function updateAvailabilityIndicators() {
                     const dayNumber = parseInt(container.querySelector('.vivido').textContent);
                     if (dayNumber === day) {
                         const button = container.querySelector(`.${turnoClass}`);
-                        if (button) button.style.border = count < 6 ? '2px solid green' : '2px solid red';
+                        if (button) button.style.border = count < 6 ? '0px solid green' : '2px solid red';
                     }
                 });
             });
