@@ -1,6 +1,7 @@
 body {
+    overflow-y:hidden;
     font-family: Arial, sans-serif;
-    background-color: #000;
+    background-image: url(/images/i7.svg);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,28 +25,35 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
+    color: white;
 }
 .register-container h2 {
     margin-bottom: 20px;
 }
 .register-container input {
-    width: 100%;
+    width: 90%;
     padding: 10px;
-    margin: 10px -10px;
+    margin: 8px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+#xd {
+    color: #7E7E7E;
+}
+#xd:hover {
+    color: #b90f0f;
 }
 .register-container button {
     width: 100%;
     padding: 10px;
-    background-color: #213688;
+    background-color: #7E7E7E;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 .register-container button:hover {
-    background-color: #1a2b6f;
+    background-color: #b90f0f;
 }
 .error-message {
     color: red;
@@ -73,14 +81,14 @@ h1 {
 .login-container button {
     width: 100%;
     padding: 10px;
-    background-color: #213688;
+    background-color: #7E7E7E;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 .login-container button:hover {
-    background-color: #1a2b6f;
+    background-color: #b90f0f;
 }
 .error-message {
     color: red;
