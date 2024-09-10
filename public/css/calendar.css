@@ -222,48 +222,30 @@ h1 {
     font-weight:normal;
 }
 
-@media (max-width: 480px) { /* Móviles pequeños */
+@media (max-width: 480px) { /* Móviles pequeños, para grandes 768px para pequeños 480px*/ 
     /* Estilo para los días de la semana en la parte superior */
     .calendar-weekdays {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr); /*Solo mostrar Lunes a Viernes */
-        gap: 1px;
-        margin-bottom: 1px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 6px;
-        color: #7e7e7e;
+        gap: 5px;
     }
 
     /* Estilo del calendario para solo 5 columnas (Lunes a Viernes) */
     .calendar {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
-        gap: 1px;
+        gap: 5px;
         max-width: 50%;
-        width: 40%;
         margin: 10px 1px;
     }
 
     .vivido {
-        position: absolute;
-        top: 40%;
+        top: 105%;
     }
 
     .day-container {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1px;
-        text-align: center;
-        color: #000;
-        align-items: center;
-        position: relative;
-        width: 30px;
+        margin-bottom: 25px;
+        width: 70px;
+        color: white;
     }
 
     .day {
-        color: #fff;
-        border: none;
         padding: 10px;
         margin: 5px 0;
         cursor: pointer;
@@ -271,26 +253,29 @@ h1 {
         width: 100%; /* Botones a tamaño completo dentro del contenedor */
     }
 
-    /* .day:hover {
-        background-color: #;
-    } */
-
     .morning {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background-image: url("../images/morningp.png");
-    background-position-y: bottom;
+    background-color: #4f76ac;
+    background-image: none;
     }
 
     .afternoon {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    background-image: url("../images/afternoon.png");
+    background-color: #b4804d;
+    background-image: none;
     }
 
     .morning, .afternoon {
     margin: 0;
     background-size: cover;
     height: 3.2em;
+    }
+}
+
+@media (max-width: 390px) {
+    .day-container {
+        width: 63px;
     }
 }

@@ -94,7 +94,7 @@ async function showDayDetails(day, turno) {
             const estudiantes = await response.json();
 
             // Crear el selector de prácticas
-            let selectPractica = '<select id="practicaSelect">';
+            let selectPractica = '<select id="practicaSelect" required><option value="lol" selected disabled>Selecciona una practica</option>';
             for (let i = 1; i <= 30; i++) {
                 selectPractica += `<option value="Práctica ${i}">Práctica ${i}</option>`;
             }
@@ -102,7 +102,7 @@ async function showDayDetails(day, turno) {
 
             modalContent.innerHTML = `
                 <p>Estudiantes registrados el ${selectedDate} (${turneto}):</p>
-                <ul>${estudiantes.map(selected_practice => `<li>${selected_practice}</li>`).join('')}</ul>
+                <ul>${estudiantes.map(nombre => `<li>${nombre}</li>`).join('')}</ul>
                 <p>Selecciona la práctica:</p>
                 ${selectPractica}
             `;
@@ -114,6 +114,7 @@ async function showDayDetails(day, turno) {
     }
 
     modal.style.display = "block";
+    // document.getElementById('practicaSelect').selectedIndex = -1;
 }
 
 
@@ -126,60 +127,62 @@ async function addAssistance() {
 
     // Obtener la práctica seleccionada
     const selectedPractice = document.getElementById('practicaSelect').value;
-
-    try {
-        const response = await fetch('/api/estudiantes/practicas', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ selected_date: selectedDate, selected_practice: selectedPractice, turno: turneto })
-        });
-
-        if (response.ok) {
-            alert('Asistencia agregada correctamente.');
-            closeModal();
-        } else {
-            alert('Error al agregar asistencia. Verifique si ya ha alcanzado el límite diario.');
-        }
-    } catch (error) {
-        alert('Error al conectar con el servidor.');
-    }
-}
-
-async function highlightUserDay() {
-    const token = localStorage.getItem('token');
-    if (!token) return; // No hacer nada si no hay token
-
-    try {
-        const response = await fetch('/api/estudiantes/practicas', { // Ruta para obtener el registro actual del usuario
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            const { selected_date, turno } = data; // Datos de la fecha y turno registrado
-
-            // Resaltar el día registrado
-            const registeredDay = new Date(selected_date).getDate();
-            const registeredTurno = turno === 'mañana' ? 'morning' : 'afternoon';
-
-            document.querySelectorAll('.day-container').forEach(container => {
-                const dayNumber = parseInt(container.querySelector('.vivido').textContent);
-                if (dayNumber === registeredDay) {
-                    const button = container.querySelector(`.${registeredTurno}`);
-                    if (button) button.style.border = '2px solid yellow'; // Añadir borde amarillo
-                }
+    if (selectedPractice !== "lol") {
+        try {
+            const response = await fetch('/api/estudiantes/practicas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ selected_date: selectedDate, selected_practice: selectedPractice, turno: turneto })
             });
-        }
-    } catch (error) {
-        console.error('Error al obtener el registro del usuario:', error);
+    
+            if (response.ok) {
+                alert('Asistencia agregada correctamente.');
+                closeModal();
+            } else {
+                alert('Error al agregar asistencia. Verifica si ya se alcanzo el límite diario o no has seleccionado una practica.');
+            }
+        } catch (error) {
+            alert('Error al conectar con el servidor.');
+        }   
+    } else {
+        alert("Selecciona una practica primero.")
     }
 }
+
+// async function highlightUserDay() {
+//     const token = localStorage.getItem('token');
+//     if (!token) return; // No hacer nada si no hay token
+
+//     try {
+//         const response = await fetch('/api/estudiantes/practicas', { // Ruta para obtener el registro actual del usuario
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer ${token}`
+//             }
+//         });
+
+//         if (response.ok) {
+//             const data = await response.json();
+//             data.forEach(({ fecha, turno,}) => {
+//                 const day = new Date(fecha).getDate();
+//                 const turnoClass = turno === 'mañana' ? 'morning' : 'afternoon';
+
+//                 document.querySelectorAll('.day-container').forEach(container => {
+//                     const dayNumber = parseInt(container.querySelector('.vivido').textContent);
+//                     if (dayNumber === day) {
+//                         const button = container.querySelector(`.${turnoClass}`);
+//                         if (button) button.style.border = '2px solid yellow'; // Añadir borde amarillo
+//                     }
+//                 });
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error al obtener el registro del usuario:', error);
+//     }
+// }
 
 async function updateAvailabilityIndicators() {
     const token = localStorage.getItem('token');
@@ -202,7 +205,7 @@ async function updateAvailabilityIndicators() {
                 
                 document.querySelectorAll('.day-container').forEach(container => {
                     const dayNumber = parseInt(container.querySelector('.vivido').textContent);
-                    if (dayNumber === day) {
+                    if (dayNumber === day+1) { /*el +1 esta solo para arreglar el desfase de un dia, en local se vera mal pero en la pagina bien*/
                         const button = container.querySelector(`.${turnoClass}`);
                         if (button) button.style.border = count < 6 ? '0px solid green' : '2px solid red';
                     }

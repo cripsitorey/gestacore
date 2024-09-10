@@ -104,13 +104,13 @@ router.get('/laboratoristas/estudiantes/:date/:turno', authenticateToken, async 
   try {
       // Consultar los nombres de los estudiantes registrados en la fecha y turno especificados
       const { rows } = await pool.query(`
-          SELECT u.nombre
+          SELECT u.nombre, e.selected_practice
           FROM estudiantes e 
           JOIN usuarios u ON e.id = u.id 
           WHERE e.selected_date = $1 AND e.turno = $2
       `, [date, turno]);
 
-      res.send(rows.map(row => row.nombre)); // Enviar solo los nombres
+      res.send(rows.map(row => row.nombre + "  ->  " + row.selected_practice));
   } catch (error) {
       console.error('Error al consultar los estudiantes registrados:', error);
       res.status(500).send('Error al consultar los estudiantes registrados');
