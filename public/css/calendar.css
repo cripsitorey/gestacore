@@ -54,7 +54,7 @@ h1 {
 /* Estilo para los días de la semana en la parte superior */
 .calendar-weekdays {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Solo mostrar Lunes a Viernes */
+    grid-template-columns: repeat(5, 1fr); /*Solo mostrar Lunes a Viernes */
     gap: 10px;
     margin-bottom: 10px;
     text-align: center;
@@ -220,4 +220,62 @@ h1 {
 
 #practicaSelect option {
     font-weight:normal;
+}
+
+@media (max-width: 480px) { /* Móviles pequeños, para grandes 768px para pequeños 480px*/ 
+    /* Estilo para los días de la semana en la parte superior */
+    .calendar-weekdays {
+        gap: 5px;
+    }
+
+    /* Estilo del calendario para solo 5 columnas (Lunes a Viernes) */
+    .calendar {
+        gap: 5px;
+        max-width: 50%;
+        margin: 10px 1px;
+    }
+
+    .vivido {
+        top: 105%;
+    }
+
+    .day-container {
+        margin-bottom: 25px;
+        width: 70px;
+        color: white;
+    }
+
+    .day {
+        padding: 10px;
+        margin: 5px 0;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%; /* Botones a tamaño completo dentro del contenedor */
+    }
+
+    .morning {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #4f76ac;
+    background-image: none;
+    }
+
+    .afternoon {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: #b4804d;
+    background-image: none;
+    }
+
+    .morning, .afternoon {
+    margin: 0;
+    background-size: cover;
+    height: 3.2em;
+    }
+}
+
+@media (max-width: 390px) {
+    .day-container {
+        width: 63px;
+    }
 }

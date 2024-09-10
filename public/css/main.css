@@ -126,23 +126,3 @@ h1 {
 .day:hover {
     background-color: #eee;
 }
-
-@media (max-width: 768px) {
-    .calendar {
-        grid-template-columns: repeat(4, 1fr); /* 4 columnas en tablets */
-    }
-    .day {
-        padding: 10px;
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .calendar {
-        grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
-    }
-    .day {
-        padding: 8px;
-        font-size: 10px;
-    }
-}
