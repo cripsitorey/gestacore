@@ -256,15 +256,14 @@ h1 {
     .morning {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background-color: #4f76ac;
-    background-image: none;
+    background-image: url(/images/sol1.svg);
+    
     }
 
     .afternoon {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    background-color: #b4804d;
-    background-image: none;
+    background-image: url(/images/luna1.svg)
     }
 
     .morning, .afternoon {
