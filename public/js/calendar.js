@@ -79,6 +79,7 @@ async function showDayDetails(day, turno) {
     const token = localStorage.getItem('token');
     if (!token) {
         alert('Debe iniciar sesión para ver los detalles.');
+        window.location.href = '/login';
         return;
     }
 

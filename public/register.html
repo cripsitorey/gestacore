@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Sglok, Registro en Calendario de Prácticas para el laboratorio de fisica.">
+    <meta name="keywords" content="Sglok, Calendario, Practicas, laboratorio, fisica">
+    <meta name="author" content="Emilio Cuenca">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Registro de Estudiantes</title>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Registro de Estudiantes</h2>
+        <div class="error-message" id="error-message"></div>
+        <input type="text" id="nombre" placeholder="Nombre Completo" required>
+        <input type="email" id="email" placeholder="Correo Institucional" required>
+        <input type="password" id="password" placeholder="Cédula (10 dígitos)" required>
+        <p id="lol">Ya estas registrado? <a href="/login" id="xd">login</a></p>
+        <button onclick="register()">Registrarse</button>
+    </div>
+
+    <script src="js/register.js"></script>
+</body>
+</html>

@@ -6,20 +6,38 @@
     <meta name="keywords" content="Sglok, Calendario, Practicas, laboratorio, fisica">
     <meta name="author" content="Emilio Cuenca">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
-    <title>Registro de Estudiantes</title>
+    <link rel="icon" type="image/x-icon" href="/images/GKTlogo_Image.svg">
+    <link rel="stylesheet" href="css/calendar.css">
+    <title>Sglok</title>
 </head>
 <body>
-    <div class="register-container">
-        <h2>Registro de Estudiantes</h2>
-        <div class="error-message" id="error-message"></div>
-        <input type="text" id="nombre" placeholder="Nombre Completo" required>
-        <input type="email" id="email" placeholder="Correo Institucional" required>
-        <input type="password" id="password" placeholder="Cédula (10 dígitos)" required>
-        <p id="lol">Ya estas registrado? <a href="/login" id="xd">login</a></p>
-        <button onclick="register()">Registrarse</button>
+    <h1>Calendario de Prácticas</h1>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button class="prev-month" id="prevMonth">&lt;</button>
+            <h2 id="currentMonth"></h2>
+            <button class="next-month" id="nextMonth">&gt;</button>
+        </div>
+        <!-- Encabezado para los días de la semana -->
+        <div class="calendar-weekdays">
+            <div>Lunes</div>
+            <div>Martes</div>
+            <div>Miércoles</div>
+            <div>Jueves</div>
+            <div>Viernes</div>
+        </div>
+        <div class="calendar" id="calendar"></div>
     </div>
 
-    <script src="js/register.js"></script>
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Detalles del Día</h2>
+            <div id="modalContent"></div>
+            <button class="add-button" id="addButton" onclick="addAssistance()">Agregar Asistencia</button>
+        </div>
+    </div>
+
+    <script src="js/calendar.js"></script>
 </body>
 </html>

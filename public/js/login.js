@@ -13,7 +13,7 @@ async function login() {
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('token', data.token);
-            window.location.href = 'calendar';  // Redirigir al calendario
+            window.location.href = '/';  // Redirigir al calendario
         } else {
             errorMessage.textContent = 'Credenciales incorrectas. Inténtalo de nuevo.';
         }

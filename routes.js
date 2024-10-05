@@ -38,48 +38,69 @@ router.use(authenticateToken);
 
 // Rutas para los estudiantes
 router.post('/estudiantes/practicas', async (req, res) => {
-  console.log('Usuario autenticado:', req.user);
+    console.log('Usuario autenticado:', req.user);
 
-  if (req.user.role !== 'estudiante') {
-      return res.status(403).send('Acceso denegado');
-  }
+    if (req.user.role !== 'estudiante') {
+        return res.status(403).send('Acceso denegado');
+    }
 
-  const { selected_date, selected_practice, turno } = req.body;
+    const { selected_date, selected_practice, turno } = req.body;
 
-  try {
-      // Verificar cuántos estudiantes ya están registrados para la fecha y turno seleccionados
-      const { rows } = await pool.query(
-          'SELECT COUNT(*) FROM estudiantes WHERE selected_date = $1 AND turno = $2',
-          [selected_date, turno]
-      );
+    // Verificar que el registro esté dentro del horario permitido (4pm a 10pm)
+    const currentDay = new Date().getDay(); //Obetener el dia actual
+    const currentHour = new Date().getHours(); // Obtener la hora actual
+    if (currentDay <= 5) { // Si es antes de 4pm o después de 10pm
+        if (currentHour < 16 || currentHour >= 22) {
+            return res.status(400).send('El registro solo está permitido entre las 4pm y las 10pm');
+        }  
+    }
 
-      console.log(`Conteo de estudiantes para la fecha ${selected_date} y turno ${turno}:`, rows[0].count);
+    try {
+        // Verificar si ya existe un registro con la misma práctica, fecha y turno
+        const { rows: practiceExists } = await pool.query(
+            'SELECT * FROM estudiantes WHERE selected_date = $1 AND selected_practice = $2 AND turno = $3',
+            [selected_date, selected_practice, turno]
+        );
 
-      if (parseInt(rows[0].count) >= 6) {
-          return res.status(400).send('No hay cupo disponible para esa fecha y turno');
-      }
+        if (practiceExists.length > 0) {
+            return res.status(400).send('La práctica ya está registrada por otro estudiante en esa fecha y turno');
+        }
 
-      // Actualizar la base de datos con la nueva asistencia del estudiante
-      const updateResult = await pool.query(
-          'UPDATE estudiantes SET selected_date = $1, selected_practice = $2, turno = $3 WHERE id = $4 RETURNING *',
-          [selected_date, selected_practice, turno, req.user.id]
-      );
+        // Verificar cuántos estudiantes ya están registrados para la fecha y turno seleccionados
+        const { rows } = await pool.query(
+            'SELECT COUNT(*) FROM estudiantes WHERE selected_date = $1 AND turno = $2',
+            [selected_date, turno]
+        );
 
-      // Si no se actualizó ninguna fila, significa que este estudiante aún no tiene una práctica registrada
-      if (updateResult.rowCount === 0) {
-          // Insertar un nuevo registro
-          await pool.query(
-              'INSERT INTO estudiantes (id, selected_date, selected_practice, turno) VALUES ($1, $2, $3, $4)',
-              [req.user.id, selected_date, selected_practice, turno]
-          );
-      }
+        console.log(`Conteo de estudiantes para la fecha ${selected_date} y turno ${turno}:`, rows[0].count);
 
-      res.send('Práctica y turno seleccionados');
-  } catch (error) {
-      console.error('Error al seleccionar la práctica:', error);
-      res.status(500).send('Error al seleccionar la práctica');
-  }
+        if (parseInt(rows[0].count) >= 6) {
+            return res.status(400).send('No hay cupo disponible para esa fecha y turno');
+        }
+
+        // Actualizar la base de datos con la nueva asistencia del estudiante
+        const updateResult = await pool.query(
+            'UPDATE estudiantes SET selected_date = $1, selected_practice = $2, turno = $3 WHERE id = $4 RETURNING *',
+            [selected_date, selected_practice, turno, req.user.id]
+        );
+
+        // Si no se actualizó ninguna fila, significa que este estudiante aún no tiene una práctica registrada
+        if (updateResult.rowCount === 0) {
+            // Insertar un nuevo registro
+            await pool.query(
+                'INSERT INTO estudiantes (id, selected_date, selected_practice, turno) VALUES ($1, $2, $3, $4)',
+                [req.user.id, selected_date, selected_practice, turno]
+            );
+        }
+
+        res.send('Práctica y turno seleccionados');
+    } catch (error) {
+        console.error('Error al seleccionar la práctica:', error);
+        res.status(500).send('Error al seleccionar la práctica');
+    }
 });
+
+
 
 
 // Obtener calendario
