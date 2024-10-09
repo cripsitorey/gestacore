@@ -3,6 +3,9 @@ const { login, authenticateToken } = require('./auth');
 const bcrypt = require('bcrypt');
 const pool = require('./db');
 const router = express.Router();
+const { DateTime } = require('luxon');
+
+const timeZone = 'America/Bogota'; // Zona horaria GMT-5
 
 router.post('/login', login); // Ruta para el login
 
@@ -47,13 +50,18 @@ router.post('/estudiantes/practicas', async (req, res) => {
     const { selected_date, selected_practice, turno } = req.body;
 
     // Verificar que el registro esté dentro del horario permitido (4pm a 10pm)
-    const currentDay = new Date().getDay(); //Obetener el dia actual
-    const currentHour = new Date().getHours(); // Obtener la hora actual
-    if (currentDay <= 5) { // Si es antes de 4pm o después de 10pm
-        if (currentHour < 16 || currentHour >= 22) {
-            return res.status(400).send('El registro solo está permitido entre las 4pm y las 10pm, la hora actual en el servidor es: ' + currentHour + 'y el dia actual es: ' + currentDay);
-        }  
+    const now = DateTime.now().setZone(timeZone);
+    
+    const currentDay = now.weekday; // Día actual (1 para lunes, 7 para domingo)
+    const currentHour = now.hour;   // Hora actual (en formato 24 horas)
+
+    // Verificar si el día es de lunes a viernes (1 a 5) y la hora está fuera del rango permitido
+    if (currentDay <= 5) { 
+        if (currentHour < 16 || currentHour >= 22) { // Si es antes de 4pm o después de 10pm
+            return res.status(400).send('El registro solo está permitido entre las 4pm y las 10pm. La hora actual en el servidor es: ' + currentHour + ' y el día actual es: ' + currentDay);
+        }
     }
+
 
     try {
         // Verificar si ya existe un registro con la misma práctica, fecha y turno
