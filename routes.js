@@ -51,7 +51,7 @@ router.post('/estudiantes/practicas', async (req, res) => {
     const currentHour = new Date().getHours(); // Obtener la hora actual
     if (currentDay <= 5) { // Si es antes de 4pm o después de 10pm
         if (currentHour < 16 || currentHour >= 22) {
-            return res.status(400).send('El registro solo está permitido entre las 4pm y las 10pm');
+            return res.status(400).send('El registro solo está permitido entre las 4pm y las 10pm, la hora actual en el servidor es: ' + currentHour + 'y el dia actual es: ' + currentDay);
         }  
     }
 
