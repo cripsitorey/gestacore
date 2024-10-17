@@ -59,6 +59,12 @@ function generateCalendar() {
             morningButton.onclick = () => showDayDetails(currentDay, 'mañana');
             dayContainer.appendChild(morningButton);
 
+            if (dayOfWeek === 4) {
+                morningButton.style.backgroundColor = 'rgba(120, 120, 120, 0.57';
+                morningButton.style.backgroundBlendMode = 'hue';
+                morningButton.onclick = () => internas("Jueves de internas")
+            }
+
             // Botón para el turno de la tarde
             const afternoonButton = document.createElement('button');
             afternoonButton.className = 'day afternoon';
@@ -116,6 +122,11 @@ async function showDayDetails(day, turno) {
 
     modal.style.display = "block";
     // document.getElementById('practicaSelect').selectedIndex = -1;
+}
+
+async function internas(txtt) {
+    alert(txtt)
+    return
 }
 
 
