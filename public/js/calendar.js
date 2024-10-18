@@ -1,6 +1,7 @@
 const calendarEl = document.getElementById('calendar');
 const modal = document.getElementById('detailsModal');
 const modalContent = document.getElementById('modalContent');
+const kitkat = document.getElementById('kitkat')
 const prevMonthBtn = document.getElementById('prevMonth');
 const nextMonthBtn = document.getElementById('nextMonth');
 const currentMonthEl = document.getElementById('currentMonth');
@@ -124,6 +125,10 @@ async function showDayDetails(day, turno) {
     // document.getElementById('practicaSelect').selectedIndex = -1;
 }
 
+async function tiktak() {
+    kitkat.style.display = "block"
+}
+
 async function internas(txtt) {
     alert(txtt)
     return
@@ -152,7 +157,7 @@ async function addAssistance() {
     
             if (response.ok) {
                 alert('Asistencia agregada correctamente.');
-                closeModal();
+                closeModal(modal);
             } else {
                 alert('Error al agregar asistencia. Verifica si ya se alcanzo el límite diario o no has seleccionado una practica.');
             }
@@ -245,8 +250,8 @@ function changeMonth(direction) {
 prevMonthBtn.addEventListener('click', () => changeMonth(-1));
 nextMonthBtn.addEventListener('click', () => changeMonth(1));
 
-function closeModal() {
-    modal.style.display = "none";
+function closeModal(kirchof) {
+    kirchof.style.display = "none";
 }
 
 window.onclick = function(event) {
