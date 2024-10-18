@@ -192,6 +192,7 @@ h1 {
 
 .closekk {
     font-size: 50px;
+    color: #343232;
     font-weight: bold;
     z-index: 2;
     position: fixed;
